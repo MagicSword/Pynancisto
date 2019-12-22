@@ -3,6 +3,7 @@ import glob
 import gzip
 import database as db
 from collections import OrderedDict
+from tqdm import tqdm
 
 
 # Opens backup file in backups folder and creates row list
@@ -10,8 +11,9 @@ def readFile():
     backup_files = glob.glob('backups/*.backup')
     # get latest backup file
     latest_backup_file = max(backup_files, key=os.path.getctime)
+    print(f'backup file: {latest_backup_file}')
     if latest_backup_file:
-        myfile = gzip.open(latest_backup_file, 'rt').read()
+        myfile = gzip.open(latest_backup_file, 'rt', encoding='utf-8').read()
         rows = myfile.splitlines()
         return rows
     return False
@@ -55,7 +57,8 @@ def writeEntities():
     if entities:
         for entity_type, entity_list in entities.items():
             print(entity_type)
-            for item in entity_list:
+            # for item in entity_list:
+            for item in tqdm(entity_list, desc=entity_type):
                 values = tuple(item.values())
                 fields = '", "'.join(item.keys())
                 qrytxt = '?'

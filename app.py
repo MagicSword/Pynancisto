@@ -10,10 +10,10 @@ app = Flask(__name__)
 @app.route("/")
 def dashboard():
     query = '''
-        SELECT account.title, total_amount, symbol, is_active, account.type
+        SELECT account.title, total_amount, symbol, account.is_active, account.type
         FROM account
         LEFT JOIN currency ON currency._id = account.currency_id
-        ORDER BY is_active DESC, sort_order DESC
+        ORDER BY account.is_active DESC, sort_order DESC
     '''
     conn = sqlite3.connect('databases/financisto.db', check_same_thread=False)
     c = conn.cursor()
@@ -123,4 +123,4 @@ def payee():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5001)
+    app.run(host='127.0.0.1', port=5001)
